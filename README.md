@@ -1,2 +1,2 @@
 # SQL
-sql
+queries by MSSQL
