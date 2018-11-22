@@ -1,2 +1,2 @@
 # SQL
-queries by MSSQL
+- MSSQL stored procedure to find a text on the whole database 
