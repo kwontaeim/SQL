@@ -5,8 +5,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[sp_search_text_to_target_tables] (@schema    SYSNAME, 
-                                     @SearchStr NVARCHAR(100)) 
+CREATE PROC [dbo].[sp_search_text_to_target_tables] (@schema    SYSNAME, @SearchStr NVARCHAR(100)) 
 AS 
   BEGIN 
       /* Declare result table variables 결과 조회 테이블 변수 선언 */ 
