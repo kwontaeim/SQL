@@ -1,4 +1,4 @@
-/****** Object:  StoredProcedure [dbo].[sp_search_text_in_target_tables]    Script Date: 2018-06-08 오전 9:16:49 ******/
+/****** Object:  StoredProcedure [dbo].[sp_search_text_in_target_tables]    Script Date: 2018-06-08 AM 9:16:49 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -30,8 +30,7 @@ AS
               @result int,
               @sql NVARCHAR(500)
               
-      /* column variables for each table's pk info
-      각 테이블의 PK 정보 저장용 컬럼 변수 */      
+      /* column variables for each table's pk info (각 테이블의 PK 정보 저장용 컬럼 변수) */      
       DECLARE @Pk_Key1 NVARCHAR(3630), 
               @Pk_Key2 NVARCHAR(3630), 
               @Pk_Key3 NVARCHAR(3630), 
@@ -41,8 +40,7 @@ AS
       SET @SearchStr2 = Quotename(@SearchStr + '%', '''') 
       PRINT '------ PROCEDURE START >>>>>>> ' + CONVERT(CHAR(19), getdate(), 120)
       
-       /* Declare cursor for scanning tables on whole database
-       host 데이터 조회 대상 테이블 스캔용 커서 선언 */ 
+       /* Declare cursor for scanning tables on whole database (host 데이터 조회 대상 테이블 스캔용 커서 선언) */ 
       DECLARE table_corsor CURSOR FOR 
         SELECT target_name 
         FROM   host_target_table_tmp 
@@ -55,8 +53,7 @@ AS
       WHILE ( @@FETCH_STATUS = 0 ) 
         BEGIN
 
-            /* Setting each table's pk info
-            각 테이블의 PK 정보 셋팅 (최대 5개 한정) */ 
+            /* Setting each table's pk info (mix 5) 각 테이블의 PK 정보 셋팅 (최대 5개 한정) */ 
             SET @Pk_Key1 = (SELECT COALESCE(max(a.COLUMN_NAME), 'null') AS column_name 
                                 FROM (
                                   SELECT COLUMN_NAME
@@ -104,8 +101,7 @@ AS
                              )
             SET @ColumnName = ''
 
-            /* start loop for scanning table's columns
-            각 테이블 컬럼 스캔 루프 시작*/ 
+            /* start loop for scanning table's columns 각 테이블 컬럼 스캔 루프 시작*/ 
             WHILE ( @ColumnName IS NOT NULL ) 
               BEGIN 
                   SET @ColumnName = (SELECT Min(Quotename(column_name)) 
@@ -115,16 +111,14 @@ AS
                                             AND data_type IN ('char','nchar','nvarchar','text','varchar')  
                                             AND Quotename(column_name) > @ColumnName)
 
-                  /* Create select queries with the columns scanned and save
-                  스캔한 컬럼으로 select문 생성 및 해당 결과 저장*/ 
+                  /* Create select queries with the columns scanned and save 스캔한 컬럼으로 select문 생성 및 해당 결과 저장*/ 
                   IF @ColumnName IS NOT NULL 
                     BEGIN 
                         SET @sql = N'SELECT @chk_col= CASE WHEN max(cast('+@ColumnName+'as varchar(max))) IS NULL THEN 1 ELSE 0 END FROM ' + @TableName + ' WITH (NOLOCK) ' + ' WHERE ' + @ColumnName  + ' LIKE ' + @SearchStr2
                         EXEC sp_executesql @sql, N'@chk_col int output',@chk_col=@result OUTPUT
                         --print @result
                         /*INSERT INTO @Results*/ 
-                        /* If there's no row, skip to excute queries
-                        해당 컬럼의 값이 없으면 쿼리 실행 생략*/
+                        /* If there's no row, skip to excute queries 해당 컬럼의 값이 없으면 쿼리 실행 생략*/
                         IF @result != 1
                             BEGIN
                                 EXEC (  'SELECT ''' + @TableName + '.' + @ColumnName + ''' as columnname, ' +  @ColumnName  + ' as columnvalue,
@@ -141,9 +135,7 @@ AS
             FETCH next FROM table_corsor INTO @TableName 
         END
 
-      /* select the results
-      결과 조회
-      */ 
+      /* select the results 결과 조회 */ 
       /*SELECT columnname, 
              columnvalue, 
              pk_key1, 
