@@ -9,8 +9,7 @@ CREATE PROC [dbo].[sp_search_text_to_target_tables] (@schema    SYSNAME,
                                      @SearchStr NVARCHAR(100)) 
 AS 
   BEGIN 
-      /* Declare result table variables
-      결과 조회 테이블 변수 선언 */ 
+      /* Declare result table variables 결과 조회 테이블 변수 선언 */ 
       /*DECLARE @Results TABLE 
         ( 
            columnname  NVARCHAR(370), 
