@@ -51,7 +51,7 @@ AS
       WHILE ( @@FETCH_STATUS = 0 ) 
         BEGIN
 
-            /* Setting each table's pk info (mix 5) 각 테이블의 PK 정보 셋팅 (최대 5개 한정) */ 
+            /* Setting each table's pk info (max 5) 각 테이블의 PK 정보 셋팅 (최대 5개 한정) */ 
             SET @Pk_Key1 = (SELECT COALESCE(max(a.COLUMN_NAME), 'null') AS column_name 
                                 FROM (
                                   SELECT COLUMN_NAME
